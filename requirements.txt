@@ -1,0 +1,4 @@
+# RliBook download proxy — runtime dependencies (pinned, tested 2026-11-10)
+fastapi==0.162.3
+uvicorn[standard]==0.54.0
+telethon==1.45.0

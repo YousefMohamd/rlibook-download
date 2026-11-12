@@ -1,0 +1,23 @@
+# RliBook download proxy — Fly.io app config.
+# The service is tiny (1 shared-CPU VM, 256 MB) and scales to zero when idle,
+# so it costs ~$0 while nobody downloads. See DEPLOY_GUIDE.md for the cost
+# picture (Fly.io has no free tier for new accounts anymore — compute is
+# billed per second while running, egress $0.02/GB in Europe).
+app = "rlibook-download-proxy"
+primary_region = "fra" # Frankfurt — closest to the catalog's readers (Egypt/EU)
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "stop" # scale to zero when idle (no traffic = no bill)
+  auto_start_machines = true # wake on the next download request
+  min_machines_running = 0
+  processes = ["app"]
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256

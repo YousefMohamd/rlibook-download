@@ -1,0 +1,27 @@
+# RliBook download proxy — Render Blueprint
+# Deploy with: Render dashboard -> New -> Blueprint -> connect the repo
+# containing this folder, OR New -> Web Service -> Docker (manual steps
+# in RENDER_DEPLOY.md). Secrets are NEVER in this file: `sync: false`
+# means Render asks for the value in the dashboard at deploy time.
+# No card is needed for the free plan.
+services:
+  - type: web
+    name: rlibook-download-proxy
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: frankfurt
+    healthCheckPath: /health
+    envVars:
+      - key: TELEGRAM_API_ID
+        sync: false
+      - key: TELEGRAM_API_HASH
+        sync: false
+      - key: TELEGRAM_SESSION_STRING
+        sync: false
+      - key: PROXY_SIGNING_KEY
+        sync: false
+      - key: PROXY_TOKEN_TTL_SECONDS
+        value: "600"
+      - key: PROXY_RATE_LIMIT_PER_MINUTE
+        value: "30"
