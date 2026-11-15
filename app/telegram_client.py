@@ -49,7 +49,7 @@ class TelegramFetcher:
         self._session_string = session_string
         self._client = None
 
-    async def _client(self):
+    async def _get_client(self):
         if self._client is None:
             from telethon import TelegramClient
             from telethon.sessions import StringSession
@@ -94,7 +94,7 @@ class TelegramFetcher:
         Returns None when the post does not exist, has no document, or has
         no document in the requested format.
         """
-        client = await self._client()
+        client = await self._get_client()
         try:
             message = await client.get_messages(handle, ids=post_id)
         except Exception as exc:  # network / flood-wait / bad handle
@@ -118,6 +118,6 @@ class TelegramFetcher:
         self, document: object, chunk_size: int = 65536
     ) -> AsyncIterator[bytes]:
         """Yield the file's bytes, chunk by chunk, straight from Telegram."""
-        client = await self._client()
+        client = await self._get_client()
         async for chunk in client.iter_download(document, chunk_size=chunk_size):
             yield chunk
